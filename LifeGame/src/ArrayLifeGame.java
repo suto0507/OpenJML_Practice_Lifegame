@@ -2,24 +2,31 @@ import javax.swing.JFrame;
 
 public class ArrayLifeGame {
 	
-	
+	//@ public invariant \type(boolean[]) == \elemtype(\typeof(cells));
 	//@public invariant cells.length == MAX_X;
-	//@public invariant (\forall int i; 0 <= i && i < MAX_X; \invariant_for(cells[i]));
+	////@public invariant (\forall int i; 0 <= i && i < MAX_X; \invariant_for(cells[i]));
 	//@public invariant (\forall int x; 0 <= x && x < MAX_X; cells[x] != null && cells[x].length == MAX_Y);
+	
 	//@public invariant (\forall int x; 0 < x && x < MAX_X-1; cells[x][1] == cells[x][MAX_Y-1] && cells[x][0] == cells[x][MAX_Y-2]);
 	//@public invariant (\forall int y; 0 < y && y < MAX_Y-1; cells[1][y] == cells[MAX_X-1][y] && cells[0][y] == cells[MAX_X-2][y]);
 	//@public invariant (cells[0][0] == cells[MAX_X-2][MAX_Y-2])&& (cells[MAX_X-1][0] == cells[1][MAX_Y-2]) && (cells[0][MAX_Y-1] == cells[MAX_X-2][1]) && (cells[MAX_X-1][MAX_Y-1] == cells[1][1]);
+	
+	//@public invariant (\forall int i; 0 <= i && i < MAX_X;(\forall int j; 0 <= j && j < MAX_X; i != j ==> cells[i] != cells[j]));
 	/*@spec_public*/ boolean cells[][];
+	
 	//@public invariant newcells.length == MAX_X;
 	
-	//@public invariant (\forall int i; 0 <= i && i < MAX_X; \invariant_for(newcells[i]));
+	//@ public invariant \type(boolean[]) == \elemtype(\typeof(newcells));
+	////@public invariant (\forall int i; 0 <= i && i < MAX_X; \invariant_for(newcells[i]));
 	//@public invariant (\forall int x; 0 <= x && x < MAX_X; newcells[x] != null && newcells[x].length == MAX_Y);
+	
 	//@public invariant (\forall int i; 0 <= i && i < MAX_X;(\forall int j; 0 <= j && j < MAX_X; cells[i]!=newcells[j]));
+	//@public invariant (\forall int i; 0 <= i && i < MAX_X;(\forall int j; 0 <= j && j < MAX_X; i != j ==> newcells[i] != newcells[j]));
 	/*@spec_public*/ boolean newcells[][];
 	
 	
 	final public int MAX_X = 12;
-	final public int MAX_Y = 22;
+	final public int MAX_Y = 12;
 	
 	
 	ArrayLifeGame(){
@@ -28,9 +35,14 @@ public class ArrayLifeGame {
 	}
 	
 	////@ensures (\forall int x; 0 <= x && x <= MAX_X-1;(\forall int y; 0 <= y && y <= MAX_Y-1; cells[x][y] == newcells[x][y]));
+	
+	//@ensures (\forall int x; 0 < x && x < MAX_X-1; newcells[x][1] == newcells[x][MAX_Y-1] && newcells[x][0] == newcells[x][MAX_Y-2]);
+	//@ensures (\forall int y; 0 < y && y < MAX_Y-1; newcells[1][y] == newcells[MAX_X-1][y] && newcells[0][y] == newcells[MAX_X-2][y]);
+	//@ensures (newcells[0][0] == newcells[MAX_X-2][MAX_Y-2])&& (newcells[MAX_X-1][0] == newcells[1][MAX_Y-2]) && (newcells[0][MAX_Y-1] == newcells[MAX_X-2][1]) && (newcells[MAX_X-1][MAX_Y-1] == newcells[1][1]);
+
 	public void stepAll(){
 		//@maintaining 1<=x && x<=MAX_X-1;
-		//@decreases MAX_X-1 - x;
+		//@decreases MAX_X-1 - x; 
 		for(int x = 1; x < MAX_X-1; x++){
 			//@maintaining 1<=x && x<=MAX_X-1;
 			//@maintaining 1<=y && y<=MAX_Y-1;
@@ -57,13 +69,39 @@ public class ArrayLifeGame {
 		newcells[0][0] = newcells[MAX_X-2][MAX_Y-2];
 		newcells[MAX_X-1][0] = newcells[1][MAX_Y-2];
 		newcells[0][MAX_Y-1] = newcells[MAX_X-2][1];
-		newcells[1][1] = newcells[MAX_X-1][MAX_Y-1];
+		//‹t‚É‚µ‚Ä‚½
+		//newcells[1][1] = newcells[MAX_X-1][MAX_Y-1];
+		newcells[MAX_X-1][MAX_Y-1] = newcells[1][1];
 		
+		copyToNew();
+	}
+	
+	
+	//@requires (\forall int x; 0 < x && x < MAX_X-1; newcells[x][1] == newcells[x][MAX_Y-1] && newcells[x][0] == newcells[x][MAX_Y-2]);
+	//@requires (\forall int y; 0 < y && y < MAX_Y-1; newcells[1][y] == newcells[MAX_X-1][y] && newcells[0][y] == newcells[MAX_X-2][y]);
+	//@requires (newcells[0][0] == newcells[MAX_X-2][MAX_Y-2])&& (newcells[MAX_X-1][0] == newcells[1][MAX_Y-2]) && (newcells[0][MAX_Y-1] == newcells[MAX_X-2][1]) && (newcells[MAX_X-1][MAX_Y-1] == newcells[1][1]);
+
+	public void copyToNew(){
 		//@maintaining 0<=x && x<=MAX_X;
+		
+		//@maintaining (\forall int x1; 0 < x1 && x1 < MAX_X-1; newcells[x1][1] == newcells[x1][MAX_Y-1] && newcells[x1][0] == newcells[x1][MAX_Y-2]);
+		//@maintaining (\forall int y1; 0 < y1 && y1 < MAX_Y-1; newcells[1][y1] == newcells[MAX_X-1][y1] && newcells[0][y1] == newcells[MAX_X-2][y1]);
+		//@maintaining (newcells[0][0] == newcells[MAX_X-2][MAX_Y-2]) && (newcells[MAX_X-1][0] == newcells[1][MAX_Y-2]) && (newcells[0][MAX_Y-1] == newcells[MAX_X-2][1]) && (newcells[MAX_X-1][MAX_Y-1] == newcells[1][1]);
+		
+		//@maintaining (\forall int x1; 0 <= x1 && x1 < x;(\forall int y1; 0 <= y1 && y1 < MAX_Y;cells[x1][y1] == newcells[x1][y1]));
+		
 		//@decreases MAX_X - x;
 		for(int x = 0; x <= MAX_X-1; x++){
 			//@maintaining 0<=x && x<=MAX_X;
 			//@maintaining 0<=y && y<=MAX_Y;
+			
+			//@maintaining (\forall int x1; 0 < x1 && x1 < MAX_X-1; newcells[x1][1] == newcells[x1][MAX_Y-1] && newcells[x1][0] == newcells[x1][MAX_Y-2]);
+			//@maintaining (\forall int y1; 0 < y1 && y1 < MAX_Y-1; newcells[1][y1] == newcells[MAX_X-1][y1] && newcells[0][y1] == newcells[MAX_X-2][y1]);
+			//@maintaining (newcells[0][0] == newcells[MAX_X-2][MAX_Y-2]) && (newcells[MAX_X-1][0] == newcells[1][MAX_Y-2]) && (newcells[0][MAX_Y-1] == newcells[MAX_X-2][1]) && (newcells[MAX_X-1][MAX_Y-1] == newcells[1][1]);
+			
+			//@maintaining (\forall int x1; 0 <= x1 && x1 < x;(\forall int y1; 0 <= y1 && y1 < MAX_Y;cells[x1][y1] == newcells[x1][y1]));
+			//@maintaining (\forall int y1; 0 <= y1 && y1 < y; cells[x][y1] == newcells[x][y1]);
+			
 			//@decreases MAX_Y - y;
 			for(int y = 0; y <= MAX_Y-1; y++){
 				cells[x][y] = newcells[x][y];
@@ -74,15 +112,18 @@ public class ArrayLifeGame {
 	//«LivingcellNum‚ÌŽd—l‚ð‚à‚Á‚Æ‘‚©‚È‚¢‚Æ–³—
 	// @ ensures newcells[x][y] ==> (cells[x][y]&&(livingCellsNum(x,y)==2||livingCellsNum(x,y)==3) || !cells[x][y] && livingCellsNum(x,y)==3);
 	// @ ensures (!newcells[x][y]) ==> (cells[x][y]&&livingCellsNum(x,y)<=1 || cells[x][y]&&livingCellsNum(x,y)>=4 || !cells[x][y]&&livingCellsNum(x,y)!=3);
+	 
+	
+	  // @also
+	  // @ requires !(0<x&&x<MAX_X-1&&0<y&&y<MAX_Y-1) && -2147483648<x&&x<2147483647&&-2147483648<y&&y<2147483647;
+	  // @ assignable newcells[x];
+	  // @ signals_only java.lang.ArrayIndexOutOfBoundsException;
+	
 	
 	//assignable newcells[x][y];‚ð‘‚¢‚Ä‚È‚©‚Á‚½‚çStepAll‚ÌŒŸØ‚ª‚à‚Ì‚·‚²‚­’x‚©‚Á‚½
-	/*@ requires (0<x&&x<MAX_X-1&&0<y&&y<MAX_Y-1);
-	  @ assignable newcells[x][y];
-	  @also
-	  @ requires !(0<x&&x<MAX_X-1&&0<y&&y<MAX_Y-1) && -2147483648<x&&x<2147483647&&-2147483648<y&&y<2147483647;
-	  @ assignable newcells[x][y];
-	  @ signals_only java.lang.ArrayIndexOutOfBoundsException;
-	 */
+	//@requires (0<x&&x<MAX_X-1&&0<y&&y<MAX_Y-1);
+	//@ensures (\forall int x1; 0<=x1 && x1<MAX_X;(\forall int y1; 0<=y1 && y1<MAX_Y;!(x==x1 && y==y1) ==> newcells[x1][y1]==\old(newcells[x1][y1])));
+	//@ensures (\forall int x2; 0<=x2 && x2<MAX_X;(\forall int y2; 0<=y2 && y2<MAX_Y;cells[x2][y2]==\old(cells[x2][y2])));
 	public void stepCell(int x,int y){
 		if(cells[x][y]&&livingCellsNum(x,y)<=1){
 			newcells[x][y] = false;
@@ -92,6 +133,7 @@ public class ArrayLifeGame {
 		}else if(!cells[x][y]&&livingCellsNum(x,y)==3){
 			newcells[x][y] = true;
 		}else{
+			//@assert \old(x) == x && \old(y) == y && \old(newcells[x]) == newcells[x];
 			newcells[x][y] = cells[x][y];
 		}
 	}
