@@ -36,9 +36,10 @@ public class ArrayLifeGame {
 	
 	////@ensures (\forall int x; 0 <= x && x <= MAX_X-1;(\forall int y; 0 <= y && y <= MAX_Y-1; cells[x][y] == newcells[x][y]));
 	
-	//@ensures (\forall int x; 0 < x && x < MAX_X-1; newcells[x][1] == newcells[x][MAX_Y-1] && newcells[x][0] == newcells[x][MAX_Y-2]);
-	//@ensures (\forall int y; 0 < y && y < MAX_Y-1; newcells[1][y] == newcells[MAX_X-1][y] && newcells[0][y] == newcells[MAX_X-2][y]);
-	//@ensures (newcells[0][0] == newcells[MAX_X-2][MAX_Y-2])&& (newcells[MAX_X-1][0] == newcells[1][MAX_Y-2]) && (newcells[0][MAX_Y-1] == newcells[MAX_X-2][1]) && (newcells[MAX_X-1][MAX_Y-1] == newcells[1][1]);
+	//’†‚ÉcopyToNew‘‚¢‚½‚Ì‚ÅŠO‚·
+	////@ensures (\forall int x; 0 < x && x < MAX_X-1; newcells[x][1] == newcells[x][MAX_Y-1] && newcells[x][0] == newcells[x][MAX_Y-2]);
+	////@ensures (\forall int y; 0 < y && y < MAX_Y-1; newcells[1][y] == newcells[MAX_X-1][y] && newcells[0][y] == newcells[MAX_X-2][y]);
+	////@ensures (newcells[0][0] == newcells[MAX_X-2][MAX_Y-2])&& (newcells[MAX_X-1][0] == newcells[1][MAX_Y-2]) && (newcells[0][MAX_Y-1] == newcells[MAX_X-2][1]) && (newcells[MAX_X-1][MAX_Y-1] == newcells[1][1]);
 
 	public void stepAll(){
 		//@maintaining 1<=x && x<=MAX_X-1;
