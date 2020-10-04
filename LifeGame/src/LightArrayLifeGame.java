@@ -17,13 +17,14 @@ public class LightArrayLifeGame {
 	//@public invariant (\forall int x; 0 <= x && x < MAX_X; newcells[x] != null && newcells[x].length == MAX_Y);
 	/*@spec_public*/ boolean newcells[][];
 	
-	
 	final public int MAX_X = 202;
 	final public int MAX_Y = 202;
 	
 	
 	
-	LightArrayLifeGame(){
+	//@requires array.length == 202;
+	//@requires (\forall int x; 0 <= x && x < 202; array[x] != null && array[x].length == 202);
+	LightArrayLifeGame(boolean[][] array){
 		cells = new boolean[MAX_X][MAX_Y];
 		newcells = new boolean[MAX_X][MAX_Y];
 		//@maintaining 1<=x && x<=MAX_X-1;
@@ -33,7 +34,8 @@ public class LightArrayLifeGame {
 			//@maintaining 1<=y && y<=MAX_Y-1;
 			//@decreases MAX_Y-1 - y;
 			for(int y = 1; y < MAX_Y-1; y++){
-				cells[x][y] = (Math.random()>0.6);
+				//cells[x][y] = (Math.random()>0.6);
+				cells[x][y] = array[x][y];
 			}
 		}
 	}

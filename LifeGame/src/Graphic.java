@@ -12,9 +12,18 @@ public class Graphic {
 	JFrame frame;
 	BufferStrategy strategy;
 	LightArrayLifeGame lal;
+	ArrayLifeGame al;
 	
 	Graphic(){
-		lal = new LightArrayLifeGame();
+		boolean array[][];
+		array = new boolean[202][202];
+		for(int x = 1; x < 202-1; x++){
+			for(int y = 1; y < 202-1; y++){
+				array[x][y] = (Math.random()>0.6);
+			}
+		}
+		lal = new LightArrayLifeGame(array);
+		al = new ArrayLifeGame(array);
 		this.frame = new JFrame("test");
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setSize(1200,1200);
@@ -38,16 +47,21 @@ public class Graphic {
 	
 	void render() {
     	Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
-    	g.setBackground(Color.gray);
-    	lal.stepAll();
+    	g.setBackground(new Color(60,60,60));
+    	al.stepAll();
     	g.clearRect(0, 0, this.frame.getWidth(), this.frame.getHeight());
+    	Color blue1 = new Color(30,40,100);
+    	Color blue2 = new Color(60,75,150);
+    	Color blue3 = new Color(100,120,200);
     	
-    	for(int x = 1; x < lal.MAX_X;x++){
-    		for(int y = 1; y < lal.MAX_Y;y++){
-    			g.setColor(new Color(250,100,100));
-    			if(lal.getCell(x, y))g.fill(new Rectangle2D.Double(100 + x*5, 100 + y*5, 5, 5));
-    			g.setColor(Color.RED);
-    			if(lal.getCell(x, y))g.draw(new Rectangle2D.Double(100 + x*5, 100 + y*5, 5, 5));
+    	for(int x = 1; x < al.MAX_X;x++){
+    		for(int y = 1; y < al.MAX_Y;y++){
+    			g.setColor(blue3);
+    			if(al.getCell(x, y))g.fill(new Rectangle2D.Double(100 + x*5, 100 + y*5, 5, 5));
+    			g.setColor(blue2);
+    			if(al.getCell(x, y))g.draw(new Rectangle2D.Double(100 + x*5 + 1, 100 + y*5 + 1, 3, 3));
+    			g.setColor(blue1);
+    			if(al.getCell(x, y))g.draw(new Rectangle2D.Double(100 + x*5, 100 + y*5, 5, 5));
         	}
     	}
     	

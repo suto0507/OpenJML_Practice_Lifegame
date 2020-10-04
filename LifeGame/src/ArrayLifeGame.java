@@ -25,13 +25,45 @@ public class ArrayLifeGame {
 	/*@spec_public*/ boolean newcells[][];
 	
 	
-	final public int MAX_X = 12;
-	final public int MAX_Y = 12;
+	final public int MAX_X = 202;
+	final public int MAX_Y = 202;
 	
 	
-	ArrayLifeGame(){
+	//@requires array.length == 202;
+	//@requires (\forall int x; 0 <= x && x < 202; array[x] != null && array[x].length == 202);
+	ArrayLifeGame(boolean[][] array){
 		cells = new boolean[MAX_X][MAX_Y];
 		newcells = new boolean[MAX_X][MAX_Y];
+		//@maintaining 1<=x && x<=MAX_X-1;
+		//@decreases MAX_X-1 - x;
+		for(int x = 1; x < MAX_X-1; x++){
+			//@maintaining 1<=x && x<=MAX_X-1;
+			//@maintaining 1<=y && y<=MAX_Y-1;
+			//@decreases MAX_Y-1 - y;
+			for(int y = 1; y < MAX_Y-1; y++){
+				//cells[x][y] = (Math.random()>0.6);
+				cells[x][y] = array[x][y];
+			}
+		}
+		//@maintaining 1<=x && x<=MAX_X-1;
+		//@maintaining (\forall int i; 1<=i && i<x;cells[i][MAX_Y-1] == cells[i][1] && cells[i][0] == cells[i][MAX_Y-2]);
+		//@decreases MAX_X-1 - x;
+		for(int x = 1; x < MAX_X-1; x++){
+			cells[x][MAX_Y-1] = cells[x][1];
+			cells[x][0] = cells[x][MAX_Y-2];
+		}
+		//@maintaining 1<=y && y<=MAX_Y-1;
+		//@maintaining (\forall int i; 1<=i && i<MAX_X-1; cells[i][MAX_Y-1] == cells[i][1] && cells[i][0] == cells[i][MAX_Y-2]);
+		//@maintaining (\forall int i; 1<=i && i<y; cells[MAX_X-1][i] == cells[1][i] && cells[0][i] == cells[MAX_X-2][i]);
+		//@decreases MAX_Y-1 - y;
+		for(int y = 1; y < MAX_Y-1; y++){
+			cells[MAX_X-1][y] = cells[1][y];
+			cells[0][y] = cells[MAX_X-2][y];
+		}
+		cells[0][0] = cells[MAX_X-2][MAX_Y-2];
+		cells[MAX_X-1][0] = cells[1][MAX_Y-2];
+		cells[0][MAX_Y-1] = cells[MAX_X-2][1];
+		cells[MAX_X-1][MAX_Y-1] = cells[1][1];
 	}
 	
 	////@ensures (\forall int x; 0 <= x && x <= MAX_X-1;(\forall int y; 0 <= y && y <= MAX_Y-1; cells[x][y] == newcells[x][y]));
@@ -172,6 +204,11 @@ public class ArrayLifeGame {
 			}
 		}
 		return sum;
+	}
+	
+	//@requires 0<=x && x<MAX_X && 0<=y && y<MAX_Y;
+	public boolean getCell(int x,int y){
+		return this.cells[x][y];
 	}
 	
 	public static void main(String[] args) {
